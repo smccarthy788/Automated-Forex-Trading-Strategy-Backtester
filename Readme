@@ -1,0 +1,130 @@
+Automated Forex Trading Strategy Backtester
+
+Overview
+    
+    This is a testing suite for foreign exchange futures trading strategies. It contains the following modules:
+        - Init
+            - Makes requests to the OANDA REST api to fetch historical price data.
+            - Packages data returned from server into "dataPackage"
+            - As of V 0.0.1
+                - Returns "dataPackage", an object containing all historical price data in the form of price candles for Daily and Monthly intervals
+                - Public functions
+                    - None
+                - Emitted events
+                    - None
+            - ToDo
+                - Fetch and package Hour, minute, and second data
+        - Main
+            - A collection of event catches, outlining the control flow of the program.
+            - As of V 0.0.1
+                - Recieves dataPackage
+                - Initializes Feeder and Tracker
+                - Public functions
+                    - None
+                - Emitted events
+                    - None
+            - ToDo
+                - Polling loop
+                    - iterate through all data points in dataPackage
+        - Tracker
+            - Contins and handles all data created by AFTSB
+            - Provides a data structure to perform statistical analysis on trading strategies
+            - As of V 0.2.1
+                - Tracks the following:
+                    - Profit and Loss
+                    - Number of sucessful / failed trades
+                    - Trade state and collection of active trades
+                    - Previous (closed) trade objects
+                - Public functions
+                    - updatePeriodTracker(currentData, callBack)
+                    - enterTrade(entryPrice, lotSize, stopLoss, takeProfit, buySell)
+                    - exitTrade(exitPrice, trade)
+                - Emitted events
+                    - 'period tracker updated'
+                    - 'entered trade', trade
+                    - 'exited trade' , trade
+            - ToDo
+                - Move period trackers to individual indicators
+                    - This will allow for different periods for different indicators / instances of an indicators
+        - Feeder
+            - Simulates real time delilvery of data points
+            - Maintains position in time
+            - As of V 0.2.1
+                - Tracks the currentDate and currentMonth
+                - State of dataPackage (finished?)
+                - Points to currentData
+                - Public functions
+                    - next()    
+                        - returns the next data point
+                - Emitted events
+                    - 'new data', currentData
+    
+    This package utilizes the following objects:
+        - RSI
+            - Describes the Relative Strength Index
+            - As of V 0.2.0
+                - Calculates a single RSI value
+                - Constructed by:
+                    - Name
+                        - As required by Indicator. Name of indicator. Defaults to 'RSI'
+                    - period
+                        - Should be the int value of the period
+                    - eventTracker
+                        - Instance of eventTracker
+                Public functions
+                    - CalculateRsi()
+                        - Calculates RSI value using data in periodData.
+                        - Currently only calculates RSI for [TIMESCOPE].closeBid
+                        - Throws invalidDataException and insufficientDataException
+                Emitted events
+                    - 'new RSI data'
+                        - emitted at the end of calculateRSI()
+                        - new RSI value is passed
+            - ToDo
+                - Handle close/bid spread
+        - Trade
+            - Describes a buy or sell trade of a currency futures
+            - As of V 0.0.1
+                - Tracks basic trade information    
+                    - entry price
+                    - lot size
+                    - stop loss / take profitLoss
+                    - buy or sell
+        - Indicator
+            - Object describing the basic properties and methods for an indicator
+            - As of V 0.2.0
+                - Constructed by:
+                    - name
+                        - name of the indicator
+                    - period
+                        - the period of the indicator
+                    - EventTracker
+                        - the EventTracker instance used to broadcast and listen to events
+                - Public functions
+                    - Note: these are never exposed from Indicator directly. Rather they are implemented by specific instance of an Indicator
+                    - periodDataFull
+                        - checks to see if indicator.periodData.length is equal to the period
+                        - returns boolean
+                    - addPeriodData(periodData)
+                        - adds period data to indicator.periodData. Queue behavior: FIFO, shifts first out, pushes to end.
+                        - broadcasts event: '[INDICATOR NAME] period data added'. Does not pass new period data.
+                        - returns true on completion
+                    - addIndicatorValue(newValue)
+                        - pushes new indicator value into indicator.record.
+                        - broadcasts event: 'new [INDICATOR NAME] data'. Passes new indicator value.
+        - EventTracker
+            - Object to handle all broadcasting of and listening to events
+            - Should be instantiated once in the beginning. Pass the same instance to everything.
+            - As of V 0.2.0
+                - Constructed by:
+                    - Nothing
+                - Public functions
+                    - broadcastEvent(eventString, data)
+                        - emits new event of name eventString
+                        - data is optional. will be emitted with event if present
+                    - registerListener(eventString, handler)
+                        - adds a listener to EventTracker instance
+                        - listens for eventString. Executes handler.
+                        - pushes object {eventString : handler} to EventTracker.listeners
+        - ToDo
+            - 

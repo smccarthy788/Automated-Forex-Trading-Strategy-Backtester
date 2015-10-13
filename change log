@@ -1,0 +1,111 @@
+V 0.2.2
+- Removed period tracking from Tracker
+    - should be handled by individual inidcators now
+- Changed signature of EventTracker.registerListener
+    - now takes eventString, handler, owner, and purpose
+    - should help provide clarity for debugging / analysis
+
+V 0.2.1
+- Added eventTracker functionality to Tracker
+    - now broadcasts events on enter/exit trade and updatePeriodTracker
+        - considering removing updatePeriodTracker as this is now handled by individual indicators
+- Added eventTracker functionality to Feeder
+    - broadcasts 'new data'
+        - should rename this to something more descriptive
+
+V 0.2.0
+- Created EventTracker object
+    - Handles all event broadcasting and listening
+    - Intended to be used with Indicator
+        - Added eventTracker property to Indicator
+        - All indicators must be instantiated with and EventTracker object
+    - Public functions
+        - broadcastEvent(eventString, data)
+            - Emits new event identified by eventString
+            - Optional data arg. Will be broadcast with event if present
+        - registerListener(eventString, handler)
+            - Adds listener for eventString, calls handler
+            - Pushes listener to EventTracker.listeners
+- Indicator addIndicatorValue method now calls EventTracker.broadcastEvent
+    - Event name: 'new [INDICATOR NAME] data'
+    - Passes new indicator data to broadcastEvent
+- Updated RSI to handle EventTracker
+    - Now brodcasts 'new RSI data' with new RSI data
+
+V 0.1.1
+- RSI inherits from Indicator
+- New Indicator methods
+    - addIndicatorValue(newValue)
+        - pushes newValue into inicator.record
+- RSI throws exceptions
+    - invalidDataException
+        - Thrown when calculated RSI value is < 0 or > 100
+        - This should never happen
+    - insufficientDataException
+        - Thrown when there is insufficient data to calculate the RSI
+        - Happens for the first few ticks
+
+V 0.1.0
+- Created an Indicator object. Will be used as predecessor for all indicators.
+    - No public functions
+    - Tracks period data and period size
+    - Methods
+        - periodDataFull
+            - checks to see if period data queue is full
+            - returns true/false. A true response indicates the period queue is full, and should be ready for indicators such as RSI
+        - addPeriodData
+            - Queue behavior: first in first out
+- Updated how Tracker and Feeder emit events
+
+V 0.0.1
+- init.js
+    - Returns "dataPackage", an object containing all historical price data in the form of price candles for Daily and Monthly intervals
+    - Public functions
+        - None
+    - Emitted events
+        - None
+- main.js
+    - Recieves dataPackage
+    - Initializes Feeder and Tracker
+    - Public functions
+        - None
+    - Emitted events
+        - None
+- tracker.js
+    - Tracks the following:
+        - Profit and Loss
+        - Number of sucessful / failed trades
+        - Trade state and collection of active trades
+        - Previous (closed) trade objects
+    - Public functions
+        - updatePeriodTracker(currentData, callBack)
+        - enterTrade(entryPrice, lotSize, stopLoss, takeProfit, buySell)
+        - exitTrade(exitPrice, trade)
+    - Emitted events
+        - 'period tracker updated' ()
+- feeder.js
+    - Tracks the currentDate and currentMonth
+    - State of dataPackage (finished?)
+    - Points to currentData
+    - Public functions
+        - next()    
+            - returns the next data point
+    - Emitted events
+        - 'new data' (currentData)
+- RSI.js
+    - Calculates a single RSI value
+    - Constructed by:
+        - priceData
+            - Should contain all nessessary data point to satisfy calcultion of RSI on the period
+        - period
+            - Should be the int value of the period
+    Public functions
+        - None
+    Emitted events
+        - None
+- Trade.js
+    - Tracks basic trade information    
+        - entry price
+        - lot size
+        - stop loss / take profitLoss
+        - buy or sell
