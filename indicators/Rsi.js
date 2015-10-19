@@ -8,6 +8,7 @@ function Rsi(name, period, eventTracker){
     this.record = [];
     this.eventTracker = eventTracker;
     
+    
 }
 
 util.inherits(Rsi, Indicator);
