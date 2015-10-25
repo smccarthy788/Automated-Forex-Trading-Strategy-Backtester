@@ -1,5 +1,5 @@
 var https = require('https');
-var main = require('./main');
+var main = require('./core/main');
 var querystring = require('querystring');
 var fs = require('fs');
 

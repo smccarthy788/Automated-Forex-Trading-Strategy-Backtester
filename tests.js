@@ -1,6 +1,6 @@
-var Indicator = require('./Indicator.js');
-var Rsi = require('./Rsi.js');
-var EventTracker = require('./EventTracker.js');
+var Indicator = require('./indicators/Indicator.js');
+var Rsi = require('./indicators/Rsi.js');
+var EventTracker = require('./core/EventTracker.js');
 
     
     module.exports = function (dataPackage){

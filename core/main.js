@@ -1,7 +1,7 @@
 var Tracker = require('./Tracker.js');
 var Feeder = require('./Feeder.js');
 var EventTracker = require('./EventTracker.js');
-var RSI = require('./Rsi.js');
+var RSI = require('../indicators/Rsi.js');
 
 module.exports = function(dataPackage) {
 	console.log('now in main');
