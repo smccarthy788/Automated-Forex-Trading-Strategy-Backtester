@@ -1,26 +1,27 @@
 var Indicator = require('./Indicator.js');
 var util = require('util');
 
-function Stch(name, period, smaPeriod, eventTracker){
-    this.name = name;
-    this.period = period;
-    this.sSmaPeriod = 3 || smaPeriod;
+function Stch(params ,gateWay, smaPeriod){
+    this.period = params.period;
+    this.SmaPeriod = params.smaPeriod || 3;
     this.kRecord = [];
     this.dRecord = [];
     this.periodData = [];
     
     
-    this.eventTracker = eventTracker;
-    
     this.lowestLow = 0;
     this.highestHigh = 0;
+    
 }
 
 util.inherits(Stch, Indicator);
 
 Stch.prototype.calculateStochasticK = function(){
-    if(!this.periodDataFull()){
+    if(this.periodDataFull()){
         var tempSTCHK = ((this.periodData[this.periodData.length -1].closeBid - this.lowestLow)/(this.highestHigh - this.lowestLow) * 100);
+        console.log((this.periodData[this.periodData.length -1].closeBid - this.lowestLow));
+        console.log((this.highestHigh - this.lowestLow));
+    
         if(tempSTCHK > 0 && tempSTCHK < 100){
             this.addIndicatorValue(tempSTCHK);
         }else{
@@ -53,12 +54,12 @@ Stch.prototype.addPeriodData = function(newData) {
         this.periodData.push(newData);
         this.isHighestHigh(newData.highBid);
         this.isLowestLow(newData.lowBid);
-        this.eventTracker.broadcastEvent(this.name + ' period data added');
+        //this.eventTracker.broadcastEvent(this.name + ' period data added');
     }
     else{
         this.periodData.shift();
         this.periodData.push(newData);
-        this.eventTracker.broadcastEvent(this.name + ' period data added');
+        //this.eventTracker.broadcastEvent(this.name + ' period data added');
     }
     return true;
 };
@@ -66,12 +67,14 @@ Stch.prototype.addPeriodData = function(newData) {
 Stch.prototype.isHighestHigh = function(pricePoint){
     if(pricePoint > this.highestHigh){
         this.highestHigh = pricePoint;
+        console.log('New Highest High! : ' + this.highestHigh);
     }
 };
 
 Stch.prototype.isLowestLow = function(pricePoint){
     if(pricePoint < this.lowestLow){
         this.lowestLow = pricePoint;
+        console.log('New Lowest Low! : ' + this.lowestLow);
     }
 };
 

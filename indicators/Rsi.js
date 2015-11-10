@@ -1,17 +1,24 @@
 var Indicator = require('./Indicator.js');
 var util = require('util');
 
-function Rsi(name, period, eventTracker){
-    this.name = name;
-    this.period = period;
-    this.periodData = [];
+function Rsi(params, gateWay){
+    //this.name = name;
+    this.period = params.period;
+    //this.periodData = [];
     this.record = [];
-    this.eventTracker = eventTracker;
+    //this.eventTracker = eventTracker;
+    
+    this.periodData = gateWay.periodData;
     
     
 }
 
 util.inherits(Rsi, Indicator);
+
+Rsi.update = function(gateWay){
+    this.periodData = gateWay.periodData;
+    this.calculateRSI();
+}
 
 Rsi.prototype.calculateRSI = function() {
 

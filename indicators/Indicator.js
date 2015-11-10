@@ -8,8 +8,6 @@ function Indicator (name, period, eventTracker) {
     this.record = [];
     this.eventTracker = eventTracker;
     
-    
-    
 }
 
 Indicator.prototype.periodDataFull = function() {
@@ -19,12 +17,12 @@ Indicator.prototype.periodDataFull = function() {
 Indicator.prototype.addPeriodData = function(newData) {
     if(!this.periodDataFull()){
         this.periodData.push(newData);
-        this.eventTracker.broadcastEvent(this.name + ' period data added');
+        this.eventTracker.broadcastEvent(this.name + ' period data added', newData);
     }
     else{
         this.periodData.shift();
         this.periodData.push(newData);
-        this.eventTracker.broadcastEvent(this.name + ' period data added');
+        this.eventTracker.broadcastEvent(this.name + ' period data added', newData);
     }
     return true;
 };
