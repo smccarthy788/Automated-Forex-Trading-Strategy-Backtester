@@ -1,63 +1,30 @@
 var indicatorDictionary = require('./indicators/indicatorDictionary.js');
 
-function Indicator(indicatorPackage){
+function indicatorGateway(indicatorPackage){
     
     this.activeIndicators = {};
+    this.exceptions = [];
     
-    this.periodData = [];
-    
-    this.longestPeriod = checkLongestPeriod(indicatorPackage);
-    
-
     for(var indicator in indicatorPackage){
         var obj = indicatorPackage[indicator];
-        console.log(indicator);
         this.activeIndicators[indicator] = new indicatorDictionary[indicator](obj, this);
     }
     
-    console.log(this.activeIndicators);
-    
-    
 }
 
-Indicator.updateIndicators = function(){
-    
+indicatorGateway.prototype.updateIndicators = function(newData){
     for(var indicator in this.activeIndicators){
         try{
-            indicator.update(this);
+            this.activeIndicators[indicator].update(newData);
         } catch(e){
-            console.log(e);
+            this.exceptions.push(e);
+            //console.log(e.message + " " + indicator);
         }
     }
-    
-    
 };
 
-Indicator.periodDataFull = function(){
-    return(this.periodData.length === this.longestPeriod);
+indicatorGateway.createNewIndicator = function(indicator){
+    this.activeIndicators[indicator.name] = new indicatorDictionary[indicator.type](indicator.params, this);
 };
 
-Indicator.addPeriodData = function(newData){
-    if(!this.periodDataFull()){
-        this.periodData.push(newData);
-        this.eventTracker.broadcastEvent(this.name + ' period data added', newData);
-    }
-    else{
-        this.periodData.shift();
-        this.periodData.push(newData);
-        this.eventTracker.broadcastEvent(this.name + ' period data added', newData);
-    }
-    return true;
-};
-
-function checkLongestPeriod(indicatorPackage){
-    var temp = 0;
-    for(var indicator in indicatorPackage){
-        if(indicator.period > temp){
-            temp = indicator.period;
-        }
-    }
-    return temp;
-}
-
-module.exports = Indicator;
+module.exports = indicatorGateway;

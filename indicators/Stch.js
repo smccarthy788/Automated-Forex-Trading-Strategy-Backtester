@@ -1,7 +1,8 @@
 var Indicator = require('./Indicator.js');
 var util = require('util');
 
-function Stch(params ,gateWay, smaPeriod){
+function Stch(params){
+    this.name = params.name || "Stch";
     this.period = params.period;
     this.SmaPeriod = params.smaPeriod || 3;
     this.kRecord = [];
@@ -14,21 +15,27 @@ function Stch(params ,gateWay, smaPeriod){
     
 }
 
-util.inherits(Stch, Indicator);
+Stch.prototype.update = function(newData){
+    this.addPeriodData(newData);
+    this.calculateStochasticK(newData);
+    //this.calculateStochasticD();
+}
 
-Stch.prototype.calculateStochasticK = function(){
+Stch.prototype.periodDataFull = function() {
+    return(this.periodData.length === this.period);
+};
+
+Stch.prototype.calculateStochasticK = function(newData){
     if(this.periodDataFull()){
-        var tempSTCHK = ((this.periodData[this.periodData.length -1].closeBid - this.lowestLow)/(this.highestHigh - this.lowestLow) * 100);
-        console.log((this.periodData[this.periodData.length -1].closeBid - this.lowestLow));
-        console.log((this.highestHigh - this.lowestLow));
+        var tempSTCHK = ((newData.closeBid - this.lowestLow)/(this.highestHigh - this.lowestLow) * 100);
     
-        if(tempSTCHK > 0 && tempSTCHK < 100){
-            this.addIndicatorValue(tempSTCHK);
+        if(tempSTCHK >= 0 && tempSTCHK <= 100){
+            this.kRecord.push(tempSTCHK);
         }else{
-            throw new invalidDataException(tempSTCHK);
+            throw new invalidDataException(tempSTCHK, this);
         }
     }else{
-        throw new insufficientDataException(this.period - this.periodData.length);
+        throw new insufficientDataException(this.period - this.periodData.length, this);
     }    
 };
 
@@ -39,13 +46,13 @@ Stch.prototype.calculateStochasticD = function(){
             sum += this.kRecord[i];
         }
         var tempSTCHD = sum / this.smaPeriod;
-        if(tempSTCHD > 0 && tempSTCHD < 100){
-            this.addIndicatorValue(tempSTCHD);
+        if(tempSTCHD >= 0 && tempSTCHD <= 100){
+            this.dRecord.push(tempSTCHD);
         }else{
-            throw new invalidDataException(tempSTCHD);
+            throw new invalidDataException(tempSTCHD, this);
         }
     }else{
-        throw new insufficientDataException(this.kRecord.length - this.smaPeriod);
+        throw new insufficientDataException(this.kRecord.length - this.smaPeriod, this);
     }
 };
 
@@ -59,6 +66,8 @@ Stch.prototype.addPeriodData = function(newData) {
     else{
         this.periodData.shift();
         this.periodData.push(newData);
+        this.isHighestHigh(newData.highBid);
+        this.isLowestLow(newData.lowBid);
         //this.eventTracker.broadcastEvent(this.name + ' period data added');
     }
     return true;
@@ -67,26 +76,26 @@ Stch.prototype.addPeriodData = function(newData) {
 Stch.prototype.isHighestHigh = function(pricePoint){
     if(pricePoint > this.highestHigh){
         this.highestHigh = pricePoint;
-        console.log('New Highest High! : ' + this.highestHigh);
+        //console.log('New Highest High! : ' + this.highestHigh);
     }
 };
 
 Stch.prototype.isLowestLow = function(pricePoint){
     if(pricePoint < this.lowestLow){
         this.lowestLow = pricePoint;
-        console.log('New Lowest Low! : ' + this.lowestLow);
+        //console.log('New Lowest Low! : ' + this.lowestLow);
     }
 };
 
-function insufficientDataException(numMissing){
+function insufficientDataException(numMissing, owner){
     this.name = 'Insufficient Data Exception';
-    this.message = 'There is insufficient data to calculate the ' + this.name;
+    this.message = 'There is insufficient data to calculate the ' + owner.name;
     this.numMissing = numMissing;
 }
 
-function invalidDataException(invalidData){
+function invalidDataException(invalidData, owner){
     this.name = 'Invalid Data Exception';
-    this.message = 'The value: ' + invalidData + ' is invalid for ' + this.name;
+    this.message = 'The value: ' + invalidData + ' is invalid for ' + owner.name;
 }
 
 module.exports = Stch;

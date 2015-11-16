@@ -5,6 +5,38 @@ var Stch = require('./indicators/Stch.js');
 
 var indicatorGateway = require('./IndicatorGateway.js');
 
+module.exports = function(dataPackage){
+    
+    var indicatorPackage = {Rsi : {name : 'test RSI', period : 14}, Stch : {name : 'test STCH', period : 14, smaPeriod : 5}};
+    var testGateway = new indicatorGateway(indicatorPackage);
+    
+
+
+    for(var i = 0; i < 200; i++){
+        testGateway.updateIndicators(dataPackage.day[i]);
+    }
+    
+    console.log(testGateway.activeIndicators['Rsi'].record);
+    console.log(testGateway.activeIndicators['Stch'].kRecord);
+    
+    //console.log(testGateway.exceptions);
+
+}
+
+
+
+
+
+
+
+
+
+
+/*
+#############
+indicatorGateway indicator creation tests
+#########################################
+
 var indicatorPackage = {Rsi : {period : 14,
                   granulatiry : "ok"},
             Stch : {period : 14
@@ -15,8 +47,9 @@ var testGateway = 0;
 
 testGateway = new indicatorGateway(indicatorPackage);
 
-//console.log(testGateway.longestPeriod);
+console.log(testGateway);
 
+*/
 
 /*
 module.exports = function(dataPackage){
