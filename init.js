@@ -78,8 +78,8 @@ function package_data(response_data) {
 	else if (dataObject.candles.length < 5000 && dataObject.granularity === "D"){
 		dataPackage.day = dataObject.candles;
 		console.log("Daily data added");
-		main(dataPackage);
-	//	tests(dataPackage);
+	//	main(dataPackage);
+		tests(dataPackage);
 	}
 	
 }

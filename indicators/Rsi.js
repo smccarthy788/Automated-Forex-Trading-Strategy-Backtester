@@ -1,17 +1,29 @@
-var Indicator = require('./Indicator.js');
-var util = require('util');
-
-function Rsi(name, period, eventTracker){
-    this.name = name;
-    this.period = period;
+function Rsi(params){
+    this.name = params.name || "Rsi";
+    this.period = params.period;
     this.periodData = [];
     this.record = [];
-    this.eventTracker = eventTracker;
-    
-    
 }
 
-util.inherits(Rsi, Indicator);
+Rsi.prototype.update = function(newData){
+    this.addPeriodData(newData);
+    this.calculateRSI();
+}
+
+Rsi.prototype.periodDataFull = function() {
+    return(this.periodData.length === this.period);
+};
+
+Rsi.prototype.addPeriodData = function(newData) {
+    if(!this.periodDataFull()){
+        this.periodData.push(newData);
+    }
+    else{
+        this.periodData.shift();
+        this.periodData.push(newData);
+    }
+    return true;
+};
 
 Rsi.prototype.calculateRSI = function() {
 
@@ -35,24 +47,24 @@ Rsi.prototype.calculateRSI = function() {
         var tempRSI = 100 - (100 / (1 + RS));
         
         if((tempRSI >= 0) && (tempRSI <= 100)){
-            this.addIndicatorValue(tempRSI);
+            this.record.push(tempRSI);
         }else{
-            throw new invalidDataException(tempRSI);
+            throw new invalidDataException(tempRSI, this);
         }
     }else{
-        throw new insufficientDataException(this.period - this.periodData.length);
+        throw new insufficientDataException(this.period - this.periodData.length, this);
     }
 };
 
-function insufficientDataException(numMissing){
+function insufficientDataException(numMissing, owner){
     this.name = 'Insufficient Data Exception';
-    this.message = 'There is insufficient data to calculate the ' + this.name;
+    this.message = 'There is insufficient data to calculate the ' + owner.name;
     this.numMissing = numMissing;
 }
 
-function invalidDataException(invalidData){
+function invalidDataException(invalidData, owner){
     this.name = 'Invalid Data Exception';
-    this.message = 'The value: ' + invalidData + ' is invalid for ' + this.name;
+    this.message = 'The value: ' + invalidData + ' is invalid for ' + owner.name;
 }
 
 

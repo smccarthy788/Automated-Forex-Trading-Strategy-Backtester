@@ -17,7 +17,7 @@ EventTracker.prototype.broadcastEvent = function(eventString, data){
 };
 
 EventTracker.prototype.registerListener = function(eventString, handler, owner, purpose){
-    this.on(eventString,handler);
+    this.on(eventString, handler);
     var obj = {
         listenerOwner : owner,
         listenerPurpose : purpose
