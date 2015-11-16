@@ -1,6 +1,3 @@
-var Indicator = require('./Indicator.js');
-var util = require('util');
-
 function Stch(params){
     this.name = params.name || "Stch";
     this.period = params.period;

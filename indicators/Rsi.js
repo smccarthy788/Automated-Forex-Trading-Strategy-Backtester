@@ -1,6 +1,3 @@
-var Indicator = require('./Indicator.js');
-var util = require('util');
-
 function Rsi(params){
     this.name = params.name || "Rsi";
     this.period = params.period;
