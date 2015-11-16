@@ -1,13 +1,8 @@
 function Rsi(params){
     this.name = params.name || "Rsi";
     this.period = params.period;
-    //this.periodData = [];
-    this.record = [];
-    //this.eventTracker = eventTracker;
-    
     this.periodData = [];
-    
-    
+    this.record = [];
 }
 
 Rsi.prototype.update = function(newData){

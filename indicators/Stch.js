@@ -58,14 +58,12 @@ Stch.prototype.addPeriodData = function(newData) {
         this.periodData.push(newData);
         this.isHighestHigh(newData.highBid);
         this.isLowestLow(newData.lowBid);
-        //this.eventTracker.broadcastEvent(this.name + ' period data added');
     }
     else{
         this.periodData.shift();
         this.periodData.push(newData);
         this.isHighestHigh(newData.highBid);
         this.isLowestLow(newData.lowBid);
-        //this.eventTracker.broadcastEvent(this.name + ' period data added');
     }
     return true;
 };
