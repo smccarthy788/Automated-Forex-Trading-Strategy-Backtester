@@ -6,10 +6,28 @@ var indicatorGateway = require('./IndicatorGateway.js');
 
 
 /*
+###############
+STCH tests
+###############
+*/
+module.exports = function(dataPackage){
+    
+    var indicatorPackage = {Stch : {name : 'test STCH', period : 14, smaPeriod : 5}};
+    var testGateway = new indicatorGateway(indicatorPackage);
+    
+    for(var i = 0; i < 20; i++){
+        testGateway.updateIndicators(dataPackage.month[i]);
+    }
+    
+    console.log(testGateway.activeIndicators['Stch'].kRecord);
+};
+
+
+/*
 ##########################
 Indicator as Gateway tests
 ##########################
-*/
+
 module.exports = function(dataPackage){
     
     var indicatorPackage = {Rsi : {name : 'test RSI', period : 14}, Stch : {name : 'test STCH', period : 14, smaPeriod : 5}};
@@ -29,11 +47,11 @@ module.exports = function(dataPackage){
 
 };
 
-
+*/
 
 
 /*
-#############
+#########################################
 indicatorGateway indicator creation tests
 #########################################
 
