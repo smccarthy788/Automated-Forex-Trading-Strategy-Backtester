@@ -19,7 +19,7 @@ Stch.prototype.update = function(newData){
 }
 
 Stch.prototype.periodDataFull = function() {
-    return(this.periodData.length === this.period);
+    return(this.periodData.length === (this.period -1));
 };
 
 Stch.prototype.calculateStochasticK = function(newData){
