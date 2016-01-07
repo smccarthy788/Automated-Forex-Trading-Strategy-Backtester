@@ -4,12 +4,31 @@ var EventTracker = require('./core/EventTracker.js');
 var Stch = require('./indicators/Stch.js');
 var indicatorGateway = require('./IndicatorGateway.js');
 
+/*
+#######################
+Full set exception test
+#######################
+
+module.exports = function(dataPackage){
+   var indicatorPackage = {Rsi : {name : 'test RSI', period : 14}, Stch : {name : 'test STCH', period : 14, smaPeriod : 5}};
+    var testGateway = new indicatorGateway(indicatorPackage);
+    
+    for(var i = 0; i < dataPackage.day.length; i++){
+        testGateway.updateIndicators(dataPackage.day[i]);
+    } 
+    
+    console.log(testGateway.updateExceptions);
+    
+    console.log(testGateway.activeIndicators['Stch'].kRecord.length);
+    console.log(testGateway.activeIndicators['Rsi'].record.length);
+};
+*/
+
 
 /*
 ###############
 STCH tests
 ###############
-*/
 module.exports = function(dataPackage){
     
     var indicatorPackage = {Stch : {name : 'test STCH', period : 14, smaPeriod : 5}};
@@ -21,7 +40,7 @@ module.exports = function(dataPackage){
     
     console.log(testGateway.activeIndicators['Stch'].kRecord);
 };
-
+*/
 
 /*
 ##########################
