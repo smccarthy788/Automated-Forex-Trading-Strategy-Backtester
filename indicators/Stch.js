@@ -2,15 +2,14 @@ function Stch(params){
     this.name = params.name || "Stch";
     this.period = params.period;
     this.SmaPeriod = params.smaPeriod || 3;
+    
     this.kRecord = [];
     this.dRecord = [];
+    
     this.periodData = [];
     
-    
-    this.lowestLow;
-    this.highestHigh;
-    
-    this.stchKCount = 0;
+    this.lowestLow = 1000;
+    this.highestHigh = 0;
     
 }
 
@@ -26,12 +25,6 @@ Stch.prototype.periodDataFull = function() {
 
 Stch.prototype.calculateStochasticK = function(newData){
     if(this.periodDataFull()){
-        this.stchKCount++;
-        console.log("STCH : " + this.stchKCount);
-        console.log("Close : " + newData.closeBid);
-        console.log("High: " + this.highestHigh);
-        console.log("Low : " +this.lowestLow);
-        console.log("");
         var tempSTCHK = ((newData.closeBid - this.lowestLow)/(this.highestHigh - this.lowestLow) * 100);
     
         if(tempSTCHK >= 0 && tempSTCHK <= 100){
@@ -76,21 +69,29 @@ Stch.prototype.addPeriodData = function(newData) {
 };
 
 Stch.prototype.isHighestHigh = function(pricePoint){
-    if(pricePoint > this.highestHigh){
-        this.highestHigh = pricePoint;
-        console.log('New Highest High! : ' + this.highestHigh);
-    } else if (this.kRecord.length == 0){
-        this.highestHigh = pricePoint;
+    var max = 0;
+    for(var i = 0; i < this.periodData.length; i++){
+        if(i == 0){
+            max = this.periodData[i].highBid;
+        } else if (max < this.periodData[i].highBid){
+            max = this.periodData[i].highBid;
+        }
     }
+    this.highestHigh = max;
+    //console.log('New Highest High! : ' + max);
 };
 
 Stch.prototype.isLowestLow = function(pricePoint){
-    if(pricePoint < this.lowestLow){
-        this.lowestLow = pricePoint;
-        console.log('New Lowest Low! : ' + this.lowestLow);
-    } else if (this.kRecord == 0){
-        this.lowestLow = pricePoint;
+    var min = 0;
+    for(var i = 0; i < this.periodData.length; i++){
+        if(i == 0){
+            min = this.periodData[i].lowBid;
+        } else if (min > this.periodData[i].lowBid){
+            min = this.periodData[i].lowBid;
+        }
     }
+    this.lowestLow = min;
+    //console.log('New Lowest Low : ' + min);
 };
 
 function insufficientDataException(numMissing, owner){
