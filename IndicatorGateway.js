@@ -3,7 +3,7 @@ var indicatorDictionary = require('./indicators/indicatorDictionary.js');
 function indicatorGateway(indicatorPackage){
     
     this.activeIndicators = {};
-    this.exceptions = [];
+    this.updateExceptions = [];
     
     for(var indicator in indicatorPackage){
         var obj = indicatorPackage[indicator];
@@ -17,7 +17,7 @@ indicatorGateway.prototype.updateIndicators = function(newData){
         try{
             this.activeIndicators[indicator].update(newData);
         } catch(e){
-            this.exceptions.push(e);
+            this.updateExceptions.push(e);
             //console.log(e.message + " " + indicator);
         }
     }

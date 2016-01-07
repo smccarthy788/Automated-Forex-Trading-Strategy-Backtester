@@ -2,12 +2,13 @@ function Stch(params){
     this.name = params.name || "Stch";
     this.period = params.period;
     this.SmaPeriod = params.smaPeriod || 3;
+    
     this.kRecord = [];
     this.dRecord = [];
+    
     this.periodData = [];
     
-    
-    this.lowestLow = 0;
+    this.lowestLow = 1000;
     this.highestHigh = 0;
     
 }
@@ -16,7 +17,7 @@ Stch.prototype.update = function(newData){
     this.addPeriodData(newData);
     this.calculateStochasticK(newData);
     //this.calculateStochasticD();
-}
+};
 
 Stch.prototype.periodDataFull = function() {
     return(this.periodData.length === this.period);
@@ -65,21 +66,32 @@ Stch.prototype.addPeriodData = function(newData) {
         this.isHighestHigh(newData.highBid);
         this.isLowestLow(newData.lowBid);
     }
-    return true;
 };
 
 Stch.prototype.isHighestHigh = function(pricePoint){
-    if(pricePoint > this.highestHigh){
-        this.highestHigh = pricePoint;
-        //console.log('New Highest High! : ' + this.highestHigh);
+    var max = 0;
+    for(var i = 0; i < this.periodData.length; i++){
+        if(i == 0){
+            max = this.periodData[i].highBid;
+        } else if (max < this.periodData[i].highBid){
+            max = this.periodData[i].highBid;
+        }
     }
+    this.highestHigh = max;
+    //console.log('New Highest High! : ' + max);
 };
 
 Stch.prototype.isLowestLow = function(pricePoint){
-    if(pricePoint < this.lowestLow){
-        this.lowestLow = pricePoint;
-        //console.log('New Lowest Low! : ' + this.lowestLow);
+    var min = 0;
+    for(var i = 0; i < this.periodData.length; i++){
+        if(i == 0){
+            min = this.periodData[i].lowBid;
+        } else if (min > this.periodData[i].lowBid){
+            min = this.periodData[i].lowBid;
+        }
     }
+    this.lowestLow = min;
+    //console.log('New Lowest Low : ' + min);
 };
 
 function insufficientDataException(numMissing, owner){
