@@ -8,8 +8,8 @@ function Stch(params){
     
     this.periodData = [];
     
-    this.lowestLow = 1000;
-    this.highestHigh = 0;
+    this.lowestLow;
+    this.highestHigh;
     
 }
 
