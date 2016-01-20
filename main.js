@@ -1,8 +1,8 @@
-var Tracker = require('./Tracker.js');
-var Feeder = require('./Feeder.js');
-var EventTracker = require('./EventTracker.js');
-var RSI = require('../indicators/Rsi.js');
-var indicatorGateway= require('../IndicatorGateway.js');
+var Tracker = require('./core/Tracker.js');
+var Feeder = require('./core/Feeder.js');
+var EventTracker = require('./core/EventTracker.js');
+var RSI = require('./indicators/Rsi.js');
+var indicatorGateway= require('./IndicatorGateway.js');
 
 module.exports = function(dataPackage) {
 	console.log('now in main');
