@@ -3,15 +3,21 @@ function Rsi(params){
     this.period = params.period;
     this.periodData = [];
     this.record = [];
+    this.lastData = 0;
 }
 
 Rsi.prototype.update = function(newData){
     this.addPeriodData(newData);
     this.calculateRSI();
-}
+    return true;
+};
 
 Rsi.prototype.periodDataFull = function() {
     return(this.periodData.length === this.period);
+};
+
+Rsi.prototype.sufficientDataCheck = function(){
+    
 };
 
 Rsi.prototype.addPeriodData = function(newData) {
@@ -30,7 +36,7 @@ Rsi.prototype.calculateRSI = function() {
     if(this.periodDataFull()){
         var moves = [];
         for(var i = 0; i < this.period-1; i++){
-            moves.push(this.periodData[i].closeBid - this.periodData[i+1].closeBid);
+            moves.push(this.periodData[i+1].closeBid - this.periodData[i].closeBid);
         }
         var upMoves = 0, downMoves = 0;
         for(i = 0; i < moves.length; i++){
@@ -43,11 +49,15 @@ Rsi.prototype.calculateRSI = function() {
         var avgUp = upMoves / this.period;
         var avgDown = downMoves / this.period;
         
+        console.log("Avg Gain : " + avgUp);
+        console.log("Avg Loss : " + avgDown);
+        
         var RS = avgUp / avgDown;
         var tempRSI = 100 - (100 / (1 + RS));
         
         if((tempRSI >= 0) && (tempRSI <= 100)){
             this.record.push(tempRSI);
+            this.lastData = tempRSI;
         }else{
             throw new invalidDataException(tempRSI, this);
         }

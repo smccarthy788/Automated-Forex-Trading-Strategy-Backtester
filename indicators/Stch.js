@@ -11,12 +11,16 @@ function Stch(params){
     this.lowestLow;
     this.highestHigh;
     
+    this.lastK = 0;
+    
 }
 
 Stch.prototype.update = function(newData){
     this.addPeriodData(newData);
     this.calculateStochasticK(newData);
     //this.calculateStochasticD();
+    
+    return true;
 };
 
 Stch.prototype.periodDataFull = function() {
@@ -29,6 +33,7 @@ Stch.prototype.calculateStochasticK = function(newData){
     
         if(tempSTCHK >= 0 && tempSTCHK <= 100){
             this.kRecord.push(tempSTCHK);
+            this.lastK = tempSTCHK;
         }else{
             throw new invalidDataException(tempSTCHK, this);
         }

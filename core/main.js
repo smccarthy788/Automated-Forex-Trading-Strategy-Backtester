@@ -2,6 +2,7 @@ var Tracker = require('./Tracker.js');
 var Feeder = require('./Feeder.js');
 var EventTracker = require('./EventTracker.js');
 var RSI = require('../indicators/Rsi.js');
+var indicatorGateway= require('../IndicatorGateway.js');
 
 module.exports = function(dataPackage) {
 	console.log('now in main');
@@ -21,14 +22,35 @@ module.exports = function(dataPackage) {
 	var feeder = new Feeder(dataPackage, eventTracker);
 	
 	// Initialize indicators
+	var indicatorPackage = {Rsi : {name : 'test RSI', period : 14}, Stch : {name : 'test STCH', period : 14, smaPeriod : 5}}; // this is temporary
+    var gateway = new indicatorGateway(indicatorPackage);
 	
-	var dailyRsi14 = new RSI('dailyRsi14', 14, eventTracker);
+	var stchLowTrips = 0;
+	var rsiHighTrips = 0;
+	var stchHighTrips = 0;
+	var rsiLowTrips = 0;
 	
-	dailyRsi14.eventTracker.registerListener('new data', function(newData){
-        dailyRsi14.addPeriodData(newData);
-    }, dailyRsi14.name, "update self on new Feeder data");
+	while(!feeder.finished){
+		gateway.updateIndicators(feeder.next().day);
+		if(gateway.activeIndicators['Rsi'].lastData >= 80){
+			rsiHighTrips++;
+		} else if(gateway.activeIndicators['Rsi'].lastData <= 20){
+			rsiLowTrips++;
+		}
+		if(gateway.activeIndicators['Stch'].lastK >= 80){
+			stchHighTrips++;
+		} else if(gateway.activeIndicators['Stch'].lastK <= 20){
+			stchLowTrips++;
+		}
+	}
 	
-
+	console.log(rsiHighTrips);
+	console.log(rsiLowTrips);
+	console.log(stchHighTrips);
+	console.log(stchLowTrips);
+	
+	
+	
 	/*
 		So, how does this polling loop work? That's a good question Sean. Let me think about that...
 		
@@ -53,9 +75,5 @@ module.exports = function(dataPackage) {
 	*/
 	
 	
-	feeder.next();
-	
-	
-	console.log(eventTracker.listeners);
 
 };

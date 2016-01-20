@@ -14,11 +14,15 @@ function Feeder(dataPackage, eventTracker){
     this.next = function(){
       this.pointer++;
       
-      if(this.pointer === dataPackage.length - 1){this.finished = true;}
+      if(this.pointer === dataPackage.day.length - 1){this.finished = true;}
       
       var returnObject= {
           day: dataPackage.day[this.pointer]
       };
+      
+     // console.log(dataPackage.day[this.pointer]);
+     // console.log(this.pointer);
+      
       
       if( (this.currentMonth < getDate(dataPackage.day[this.pointer].time).getMonth()) 
       || (this.currentMonth === 11 && getDate(dataPackage.day[this.pointer].time).getMonth() === 0 ) ){
@@ -29,7 +33,9 @@ function Feeder(dataPackage, eventTracker){
       this.currentMonth = this.currentDate.getMonth();
       this.currentData = returnObject;
       this.eventTracker.broadcastEvent('new data', returnObject);
+      return returnObject;
     };
+
 }
 
 function getDate(microSecondTimeStamp){

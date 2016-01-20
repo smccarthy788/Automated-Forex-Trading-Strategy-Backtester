@@ -1,28 +1,28 @@
 0 info it worked if it ends with ok
 1 verbose cli [ '/home/ubuntu/.nvm/v0.10.35/bin/node',
 1 verbose cli   '/home/ubuntu/.nvm/v0.10.35/bin/npm',
-1 verbose cli   'init' ]
+1 verbose cli   'start' ]
 2 info using npm@1.4.28
 3 info using node@v0.10.35
-4 silly package data undefined
-5 info init written successfully
-6 error Error: Invalid name: "Automated Forex Trading Strategy Backtester"
-6 error     at ensureValidName (/home/ubuntu/.nvm/v0.10.35/lib/node_modules/npm/node_modules/read-package-json/node_modules/normalize-package-data/lib/fixer.js:315:15)
-6 error     at Object.module.exports.fixNameField (/home/ubuntu/.nvm/v0.10.35/lib/node_modules/npm/node_modules/read-package-json/node_modules/normalize-package-data/lib/fixer.js:204:5)
-6 error     at /home/ubuntu/.nvm/v0.10.35/lib/node_modules/npm/node_modules/read-package-json/node_modules/normalize-package-data/lib/normalize.js:30:38
-6 error     at Array.forEach (native)
-6 error     at normalize (/home/ubuntu/.nvm/v0.10.35/lib/node_modules/npm/node_modules/read-package-json/node_modules/normalize-package-data/lib/normalize.js:29:15)
-6 error     at final (/home/ubuntu/.nvm/v0.10.35/lib/node_modules/npm/node_modules/read-package-json/read-json.js:342:33)
-6 error     at then (/home/ubuntu/.nvm/v0.10.35/lib/node_modules/npm/node_modules/read-package-json/read-json.js:126:33)
-6 error     at /home/ubuntu/.nvm/v0.10.35/lib/node_modules/npm/node_modules/read-package-json/read-json.js:266:40
-6 error     at evalmachine.<anonymous>:272:14
-6 error     at /home/ubuntu/.nvm/v0.10.35/lib/node_modules/npm/node_modules/graceful-fs/graceful-fs.js:102:5
-7 error If you need help, you may report this *entire* log,
-7 error including the npm and node versions, at:
-7 error     <http://github.com/npm/npm/issues>
-8 error System Linux 3.14.13-c9
-9 error command "/home/ubuntu/.nvm/v0.10.35/bin/node" "/home/ubuntu/.nvm/v0.10.35/bin/npm" "init"
-10 error cwd /home/ubuntu/workspace/dt
-11 error node -v v0.10.35
-12 error npm -v 1.4.28
-13 verbose exit [ 1, true ]
+4 verbose run-script [ 'prestart', 'start', 'poststart' ]
+5 info prestart oanda_aftsb@0.0.1
+6 info start oanda_aftsb@0.0.1
+7 verbose unsafe-perm in lifecycle true
+8 info oanda_aftsb@0.0.1 Failed to exec start script
+9 error oanda_aftsb@0.0.1 start: `node init.js`
+9 error Exit status 8
+10 error Failed at the oanda_aftsb@0.0.1 start script.
+10 error This is most likely a problem with the oanda_aftsb package,
+10 error not with npm itself.
+10 error Tell the author that this fails on your system:
+10 error     node init.js
+10 error You can get their info via:
+10 error     npm owner ls oanda_aftsb
+10 error There is likely additional logging output above.
+11 error System Linux 4.2.0-c9
+12 error command "/home/ubuntu/.nvm/v0.10.35/bin/node" "/home/ubuntu/.nvm/v0.10.35/bin/npm" "start"
+13 error cwd /home/ubuntu/workspace/dt
+14 error node -v v0.10.35
+15 error npm -v 1.4.28
+16 error code ELIFECYCLE
+17 verbose exit [ 1, true ]

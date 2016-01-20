@@ -4,13 +4,55 @@ var EventTracker = require('./core/EventTracker.js');
 var Stch = require('./indicators/Stch.js');
 var indicatorGateway = require('./IndicatorGateway.js');
 
+
+
+/*
+#########
+RSI tests
+#########
+*/
+module.exports = function(dataPackage){
+    var indicatorPackage = {Rsi : {name : 'test RSI', period : 14}};
+    var testGateway = new indicatorGateway(indicatorPackage);
+    
+    
+    for(var j = 0; j < 20; j++){
+        testGateway.updateIndicators(dataPackage.day[j]);
+    }
+/*
+    for(var i = 0; i < dataPackage.day.length; i++){
+        testGateway.updateIndicators(dataPackage.day[i]);
+    }
+    
+    //What is the average RSI value?
+    
+    var numRsi = testGateway.activeIndicators['Rsi'].record.length;
+    var rsiSum = 0;
+    for(i =0; i <numRsi; i++){
+        rsiSum = rsiSum + testGateway.activeIndicators['Rsi'].record[i];
+    }
+    
+    console.log(rsiSum / numRsi);*/
+    
+    console.log(testGateway.activeIndicators['Rsi'].record);
+    console.log(testGateway.updateExceptions.length);
+    
+    
+};
+
+
+
+
+
+
+
 /*
 #######################
 Full set exception test
 #######################
 
 module.exports = function(dataPackage){
-   var indicatorPackage = {Rsi : {name : 'test RSI', period : 14}, Stch : {name : 'test STCH', period : 14, smaPeriod : 5}};
+    var indicatorPackage = {Rsi : {name : 'test RSI', period : 14}, Stch : {name : 'test STCH', period : 14, smaPeriod : 5}};
     var testGateway = new indicatorGateway(indicatorPackage);
     
     for(var i = 0; i < dataPackage.day.length; i++){
